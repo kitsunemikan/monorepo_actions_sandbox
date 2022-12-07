@@ -10,7 +10,7 @@ A sandbox where I test the monorepo idea using Github actions
 Workflow:
 
 - [ ] When draft PR is created or pushed to, move associated task to the "In progress" column
-- [ ] When draft PR is stale for two days, move the associated task to the "To Do" column
+- [ ] When all draft PR associated with the task are stale for two days, move the task to the "To Do" column
 - [ ] When draft PR becomes normal PR, move to "Code review" column
 - [ ] When normar PR gets all N necessary reviews, move to "Testing" column
 - [ ] Need to think about this, but, maybe if somebody from the tester group approves PR, move to "Ready for merge" column... or merge automatically
