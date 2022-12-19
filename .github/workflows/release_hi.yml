@@ -8,18 +8,38 @@ on:
         type: string
 
 jobs:
-  windows:
-    uses: ./.github/workflows/build_hi_windows.yml
+  windows-x64:
+    uses: ./.github/workflows/build_hi_generic.yml
     with:
       version-number: ${{ inputs.version-number }}
+      os-name: windows
+      os-version: latest
+      arch: "amd64"
+
+  windows-x86:
+    uses: ./.github/workflows/build_hi_generic.yml
+    with:
+      version-number: ${{ inputs.version-number }}
+      os-name: windows
+      os-version: latest
+      arch: "386"
+
+  ubuntu-20.04:
+    uses: ./.github/workflows/build_hi_generic.yml
+    with:
+      version-number: ${{ inputs.version-number }}
+      os-name: ubuntu
+      os-version: "20.04"
+      arch: "amd64"
 
   upload:
-    needs: windows
+    needs: [windows-x64, windows-x86, ubuntu-20.04]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
         with:
           path: ./artifacts
+
       - name: Glob artifacts
         uses: tj-actions/glob@v16
         id: glob
@@ -30,6 +50,7 @@ jobs:
         run: |
           mkdir bin
           mv ${{ steps.glob.outputs.paths }} bin
+
       - name: Create release
         uses: Roang-zero1/github-create-release-action@master
         env:

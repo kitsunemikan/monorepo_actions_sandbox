@@ -1,0 +1,48 @@
+name: Build hi
+
+on:
+  workflow_call:
+    inputs:
+      version-number:
+        required: true
+        type: string
+      os-name:
+        required: true
+        type: string
+      os-version:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ${{ inputs.os-name }}-${{ inputs.os-version }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18.0'
+            #cache: true
+      - name: Generate artifact tag
+        id: artifact-tag
+        run: |
+          os_tag=${{ inputs.os-name }}
+          if [ "${{ inputs.os-version }}" != "latest" ]
+          then
+            os_tag=$os_tag-${{ inputs.os-version }}
+          fi
+
+          echo "tag=$os_tag-${{ inputs.arch }}" >> $GITHUB_OUTPUT
+      - name: Build
+        id: build
+        env:
+          GOARCH: ${{ inputs.arch }}
+        run: |
+          mkdir bin
+          go build -o "bin/hi-v${{ inputs.version-number }}-$os_tag-${{ inputs.arch }}.exe" ./cmd/hi
+      - uses: actions/upload-artifact@v3
+        with:
+          name: hi-${{ steps.artifact-tag.outputs.tag }}
+          path: ./bin/*
