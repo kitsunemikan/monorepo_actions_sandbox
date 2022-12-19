@@ -8,8 +8,33 @@ on:
         type: string
 
 jobs:
-  test:
+  windows:
+    uses: ./.github/workflows/build_hi_windows.yml
+    with:
+      version-number: ${{ inputs.version-number }}
+
+  upload:
+    needs: windows
     runs-on: ubuntu-latest
     steps:
-      - name: Print greeting
-        run: echo "Release hi workflow! Using version ${{ inputs.version-number }}"
+      - uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+      - name: Move binaries out of artifact directories
+        run: |
+          mkdir bin
+          for dir in $(ls ./artifacts)
+          do
+            mv $dir/* bin
+          done
+
+      - name: Create release
+        uses: Roang-zero1/github-create-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts to release
+        uses: Roang-zero1/github-upload-release-artifacts-action@master
+        with:
+          args: bin/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

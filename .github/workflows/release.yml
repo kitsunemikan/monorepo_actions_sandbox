@@ -1,4 +1,4 @@
-name: Dispatch relevant publish workflow
+name: Release
 
 on:
   release:
