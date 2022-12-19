@@ -4,8 +4,10 @@ A sandbox where I test the monorepo idea using Github actions
 
 ## Goals
 
-- [ ] Make releases trigger a publish action
+- [X] Make releases trigger a publish action
 - [ ] Let publish action decide what to build based on tag
+- [ ] Create many workflows that build for specific OS
+- [ ] Create reusable workflow that will upload specified artifacts to GH release
 
 Workflow:
 
