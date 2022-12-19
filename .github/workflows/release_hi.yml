@@ -1,0 +1,15 @@
+name: Release hi
+
+on:
+  workflow_call:
+    inputs:
+      version-number:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print greeting
+        run: echo "Release hi workflow! Using version ${{ inputs.version-number }}"

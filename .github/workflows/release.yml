@@ -26,13 +26,10 @@ jobs:
           echo "project=$project" >> $GITHUB_OUTPUT
           echo "vernum=$vernum" >> $GITHUB_OUTPUT
 
-  test-tag:
+  hi:
     needs: latest-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print tag data
-        run: |
-          echo "Tag: ${{ needs.latest-tag.outputs.tag }}"
-          echo "Project: ${{ needs.latest-tag.outputs.project }}"
-          echo "Version number: ${{ needs.latest-tag.outputs.version-number }}"
-
+    if: ${{ needs.latest-tag.outputs.project == 'hi' }}
+    uses: ./.github/workflows/release_hi.yml
+    with:
+      version-number: ${{ needs.latest-tag.outputs.version-number }}
+    secrets: inherit
