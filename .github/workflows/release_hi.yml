@@ -20,14 +20,16 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           path: ./artifacts
+      - name: Glob artifacts
+        uses: tj-actions/glob@v16
+        id: glob
+        with:
+          files: |
+            artifacts/*/*
       - name: Move binaries out of artifact directories
         run: |
           mkdir bin
-          for dir in $(ls ./artifacts)
-          do
-            mv $dir/* bin
-          done
-
+          mv ${{ steps.glob.outputs.paths }} bin
       - name: Create release
         uses: Roang-zero1/github-create-release-action@master
         env:
