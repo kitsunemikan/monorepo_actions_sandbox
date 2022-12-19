@@ -27,7 +27,7 @@ jobs:
       - name: Build x64
         env:
           GOARCH: ${{ matrix.arch }}
-        run: go build -o "hi v${{ inputs.version-number }} ${{ matrix.arch }}.exe" ./cmd/hi
+        run: go build -o "hi-v${{ inputs.version-number }}-${{ matrix.arch }}.exe" ./cmd/hi
       - uses: actions/upload-artifact@v3
         with:
           name: hi-windows-${{ matrix.arch }}
