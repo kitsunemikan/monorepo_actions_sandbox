@@ -15,6 +15,20 @@ on:
       arch:
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      version-number:
+        required: true
+        type: string
+      os-name:
+        required: true
+        type: string
+      os-version:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
 
 jobs:
   artifact-tag:
@@ -36,8 +50,18 @@ jobs:
   build:
     needs: artifact-tag
     runs-on: ${{ inputs.os-name }}-${{ inputs.os-version }}
+    defaults:
+      text:
+        windows:
+          "386": "windows-x86"
+          amd64: "windows-x64"
+        macos:
+          "386": "macos-x86"
+          amd64: "macos-x64"
     steps:
       - uses: actions/checkout@v3
+      - run: |
+          echo 'Test: ${{ defaults.text[inputs.os-name][inputs.arch] }}'
       - uses: actions/setup-go@v3
         with:
           go-version: '1.18.0'
